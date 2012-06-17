@@ -8,7 +8,7 @@
 		@import "js/datatables/media/css/jquery.dataTables_themeroller.css";
 		@import "js/datatables/media/css/pepper-grinder/jquery-ui-1.8.21.custom.css";
 	</style>
-	<link rel="stylesheet" href="/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="js/fancyBox/jquery.fancybox.css" type="text/css" media="screen" />
 	
 	
 	<link rel="stylesheet" href="js/prettycheckboxes/css/prettyCheckboxes.css" type="text/css" media="screen" title="prettyComment main stylesheet" charset="utf-8" />
@@ -21,7 +21,7 @@
 	<script type="text/javascript" src="js/loadmask/jquery.loadmask.min.js"></script>
 	
 	
-	<script type="text/javascript" src="/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+	<script type="text/javascript" src="js/fancyBox/jquery.fancybox.js"></script>
 	
 	
 	<!-- Page Scripts -->
@@ -50,6 +50,10 @@
 						$("#sourcecode").html(json.codesample); //print the source code to the page before printing the table
 						fnCallback(json); //finalize dataTables run
 					} );
+				},
+				
+				"fnRowCallback":function( nRow, aData, iDisplayIndex, iDisplayIndexFull ){
+					$(nRow).children('td:first').children('img').click(function(){alert('hello')})
 				}
 			} );
 			$('#dataTable').dataTable().bind('processing', 
@@ -65,6 +69,8 @@
 				var oTable = $('#dataTable').dataTable();
 				oTable.fnDraw();
 			});
+			
+	
 		} );
 		
 		function ajaxIndicator(hide) {
@@ -83,6 +89,7 @@
 				$(this).prev().find('.openindicator').text(indicator);
 			});
 		}
+		
 	</script>
 </head>
 <body>
