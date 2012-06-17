@@ -14,6 +14,7 @@
 	<link rel="stylesheet" href="js/prettycheckboxes/css/prettyCheckboxes.css" type="text/css" media="screen" title="prettyComment main stylesheet" charset="utf-8" />
 	<link href="js/loadmask/jquery.loadmask.css" rel="stylesheet" type="text/css" />
 	<link href="css/style.css" rel="stylesheet" type="text/css" />
+	
 	<!-- Script Includes -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<script type="text/javascript" language="javascript" src="js/datatables/media/js/jquery.dataTables.min.js"></script>
@@ -53,7 +54,14 @@
 				},
 				
 				"fnRowCallback":function( nRow, aData, iDisplayIndex, iDisplayIndexFull ){
-					$(nRow).children('td:first').children('img').click(function(){alert('hello')})
+					$(nRow).children('td:first').children('img').click(function(){
+						embedCode='<video controls poster="./media/sintel.jpg" width="720" height="306">'
+  embedCode+='<source type="video/mp4" src="./media/sintel.mp4">'
+embedCode+='</video>'
+					
+						$.fancybox(
+						embedCode,{})
+					})
 				}
 			} );
 			$('#dataTable').dataTable().bind('processing', 
@@ -203,6 +211,10 @@
 		</ul>
 	</div>
 </article>
+<video >
+  <source type="video/mp4" src="http://www.kaltura.com/p/725102/sp/0/playManifest/entryId/0_qbv24hsz/format/url/flavorParamId/301951/ks/0/0_qbv24hsz.mp4">
+</video>
 <script type="text/javascript" src="js/accordion-menu/jMenu.js"></script>
+<script type="text/javascript" src="js/html5.kaltura.org.js"></script>
 </body>
 </html>
