@@ -8,6 +8,9 @@
 		@import "js/datatables/media/css/jquery.dataTables_themeroller.css";
 		@import "js/datatables/media/css/pepper-grinder/jquery-ui-1.8.21.custom.css";
 	</style>
+	<link rel="stylesheet" href="/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+	
+	
 	<link rel="stylesheet" href="js/prettycheckboxes/css/prettyCheckboxes.css" type="text/css" media="screen" title="prettyComment main stylesheet" charset="utf-8" />
 	<link href="js/loadmask/jquery.loadmask.css" rel="stylesheet" type="text/css" />
 	<link href="css/style.css" rel="stylesheet" type="text/css" />
@@ -16,6 +19,11 @@
 	<script type="text/javascript" language="javascript" src="js/datatables/media/js/jquery.dataTables.min.js"></script>
 	<script src="js/prettycheckboxes/js/prettyCheckboxes.js" charset="utf-8" ></script>
 	<script type="text/javascript" src="js/loadmask/jquery.loadmask.min.js"></script>
+	
+	
+	<script type="text/javascript" src="/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+	
+	
 	<!-- Page Scripts -->
 	<script type="text/javascript" charset="utf-8">
 		$(document).ready(function() {
