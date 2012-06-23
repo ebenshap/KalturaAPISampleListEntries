@@ -160,6 +160,7 @@
 		} else {
 			$row[] = '<a href="'.$entry->dataUrl.'" target="_blank" class="downloadlink"></a>';
 		}
+		$row[]=$entry->duration.'';
 		$output['aaData'][] = $row;
 	}
 	

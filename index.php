@@ -33,9 +33,9 @@
 			$('#dataTable').dataTable( {
 				"bJQueryUI": true,
 				"bProcessing": true,
-				"bServerSide": true,
+				//"bServerSide": true,
 				"sAjaxSource": "./getlist.php",
-				"aoColumnDefs": [ 
+			"aoColumnDefs": [ 
 				  { "bSortable": false, "aTargets": [ 0 ] },
 				  { "bSortable": false, "aTargets": [ 2 ] },
 				  { "bSortable": false, "aTargets": [ 4 ] },
@@ -43,24 +43,62 @@
 				  { "bSortable": false, "aTargets": [ 7 ] }
 				],
 				"fnServerParams": function ( aoData ) {
+		
 				  aoData.push( { "name": "statusIn", "value": $.map($("input[name='filterstatus[braket]']:checked"),function(a){return a.value;}) } );
 				  aoData.push( { "name": "mediaTypeIn", "value": $.map($("input[name='filtermediatype[braket]']:checked"),function(a){return a.value;}) } );
 				},
 				"fnServerData": function ( sSource, aoData, fnCallback ) {
+					
 					$.getJSON( sSource, aoData, function (json) { 
+						string=''
+						for(prop in json){
+							string+=prop+':'+json[prop]
+						}
 						$("#sourcecode").html(json.codesample); //print the source code to the page before printing the table
 						fnCallback(json); //finalize dataTables run
 					} );
 				},
 				
-				"fnRowCallback":function( nRow, aData, iDisplayIndex, iDisplayIndexFull ){
+			"fnRowCallback":function( nRow, aData, iDisplayIndex, iDisplayIndexFull ){
+					var thing=0
+					var times=new Array();	
+					var i=0
+					var timer=null
+					
+					$(nRow).children('td:first').children('img').mouseover(function(){	
+						var that=this
+						if(aData[8]>10){
+							if(times.length<10){
+								
+								var timeUnit=aData[8]/10
+								var timeUnits=0
+								for(i; i<10; i++){
+									timeUnits=Math.floor(timeUnit*i)
+									times.push(new Image());
+									times[i].setAttribute('src', 'http://cdn.kaltura.com/p/725102/thumbnail/entry_id/'+aData[2]+'/width/50/height/50/type/1/quality/100/vid_sec/'+timeUnits);
+								}
+							}
+							i=0
+							timer=setInterval(function(){
+								if(i < 10){
+									
+									that.src=times[i++].src
+								}	
+							},800)
+						
+						}
+					})
+					
+					$(nRow).children('td:first').children('img').mouseout(function(){
+						clearTimeout(timer)
+					})
+					
 					$(nRow).children('td:first').children('img').click(function(){
 						embedCode='<video controls poster="./media/sintel.jpg" width="720" height="306">'
   embedCode+='<source type="video/mp4" src="./media/sintel.mp4">'
 embedCode+='</video>'
 					
-						$.fancybox(
-						embedCode,{})
+						$.fancybox(embedCode,{})
 					})
 				}
 			} );
@@ -211,10 +249,8 @@ embedCode+='</video>'
 		</ul>
 	</div>
 </article>
-<video >
-  <source type="video/mp4" src="http://www.kaltura.com/p/725102/sp/0/playManifest/entryId/0_qbv24hsz/format/url/flavorParamId/301951/ks/0/0_qbv24hsz.mp4">
-</video>
 <script type="text/javascript" src="js/accordion-menu/jMenu.js"></script>
 <script type="text/javascript" src="js/html5.kaltura.org.js"></script>
+
 </body>
 </html>
