@@ -7,10 +7,12 @@
 	<style type="text/css" media="screen">
 		@import "js/datatables/media/css/jquery.dataTables_themeroller.css";
 		@import "js/datatables/media/css/pepper-grinder/jquery-ui-1.8.21.custom.css";
+		#myVideoPlayer{
+			height:333px;
+			width:400px;
+		}
 	</style>
 	<link rel="stylesheet" href="js/fancyBox/jquery.fancybox.css" type="text/css" media="screen" />
-	
-	
 	<link rel="stylesheet" href="js/prettycheckboxes/css/prettyCheckboxes.css" type="text/css" media="screen" title="prettyComment main stylesheet" charset="utf-8" />
 	<link href="js/loadmask/jquery.loadmask.css" rel="stylesheet" type="text/css" />
 	<link href="css/style.css" rel="stylesheet" type="text/css" />
@@ -20,14 +22,20 @@
 	<script type="text/javascript" language="javascript" src="js/datatables/media/js/jquery.dataTables.min.js"></script>
 	<script src="js/prettycheckboxes/js/prettyCheckboxes.js" charset="utf-8" ></script>
 	<script type="text/javascript" src="js/loadmask/jquery.loadmask.min.js"></script>
-	
-	
 	<script type="text/javascript" src="js/fancyBox/jquery.fancybox.js"></script>
-	
-	
+	<!-- <script type="text/javascript" src="http://cdn.kaltura.org/apis/seo/flashembed.js"></script>
+	<script type="text/javascript" src="http://cdn.kaltura.org/apis/seo/kdp_embed.js"></script>
+	-->
 	<!-- Page Scripts -->
 	<script type="text/javascript" charset="utf-8">
+function jsCallbackReady(objectId){
+	
+	window.kdp=document.getElementById(objectId)
+}	
+	
 		$(document).ready(function() {
+	
+			
 			var configset = <?php require_once('kalturaconf.php'); echo '"'.$adminSecret.'"'; ?>;
 			if (configset != 'your-api-admin-secret') $('.notep').hide();
 			$('#dataTable').dataTable( {
@@ -94,11 +102,18 @@
 					})
 					
 					$(nRow).children('td:first').children('img').click(function(){
-						embedCode='<video controls poster="./media/sintel.jpg" width="720" height="306">'
-  embedCode+='<source type="video/mp4" src="./media/sintel.mp4">'
-embedCode+='</video>'
 					
-						$.fancybox(embedCode,{})
+						var embedCode='<div id="myVideoPlayer"><object id="myVideoPlayer" name="myVideoPlayer" type="application/x-shockwave-flash" allowFullScreen="true" allowNetworking="all" allowScriptAccess="always" height="333" width="400" bgcolor="#000000" xmlns:dc="http://purl.org/dc/terms/" xmlns:media="http://search.yahoo.com/searchmonkey/media/" rel="media:video" resource="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_725102/uiconf_id/8145862/entry_id/'+aData[2]+'" data="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_725102/uiconf_id/8145862/entry_id/'+aData[2]+'"><param name="allowFullScreen" value="true" /><param name="allowNetworking" value="all" /><param name="allowScriptAccess" value="always" /><param name="bgcolor" value="#000000" /><param name="flashVars" value="externalInterfaceDisabled=false" /> <param name="movie" value="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_725102/uiconf_id/8145862/entry_id/' + aData[2]+ '" /></object></div>'
+						
+						$.fancybox(embedCode, { 
+							'height':333,
+							'width':400,
+							'scrolling':'no',
+							'autoDimensions':'false'
+							}
+						)
+						
+						
 					})
 				}
 			} );
@@ -249,6 +264,7 @@ embedCode+='</video>'
 		</ul>
 	</div>
 </article>
+
 <script type="text/javascript" src="js/accordion-menu/jMenu.js"></script>
 <script type="text/javascript" src="js/html5.kaltura.org.js"></script>
 
