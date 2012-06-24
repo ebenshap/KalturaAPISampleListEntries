@@ -7,9 +7,12 @@
 	<style type="text/css" media="screen">
 		@import "js/datatables/media/css/jquery.dataTables_themeroller.css";
 		@import "js/datatables/media/css/pepper-grinder/jquery-ui-1.8.21.custom.css";
-		#myVideoPlayer{
-			height:333px;
+		#videoPlayerContainer{
+			height:380px;
 			width:400px;
+		}
+		#shareCuePoint, #back{
+			cursor:pointer
 		}
 	</style>
 	<link rel="stylesheet" href="js/fancyBox/jquery.fancybox.css" type="text/css" media="screen" />
@@ -29,9 +32,16 @@
 	<!-- Page Scripts -->
 	<script type="text/javascript" charset="utf-8">
 function jsCallbackReady(objectId){
-	
 	window.kdp=document.getElementById(objectId)
+ 	
+	kdp.addJsListener("kdpReady", 'startPlayer')
+	
 }	
+startPlayer=function(){
+
+	
+	kdp.sendNotification('doPlay')
+}
 	
 		$(document).ready(function() {
 	
@@ -41,7 +51,7 @@ function jsCallbackReady(objectId){
 			$('#dataTable').dataTable( {
 				"bJQueryUI": true,
 				"bProcessing": true,
-				//"bServerSide": true,
+				"bServerSide": true,
 				"sAjaxSource": "./getlist.php",
 			"aoColumnDefs": [ 
 				  { "bSortable": false, "aTargets": [ 0 ] },
@@ -73,6 +83,8 @@ function jsCallbackReady(objectId){
 					var i=0
 					var timer=null
 					
+					
+					//Perhaps a call back function should be set here to be performed at the very end
 					$(nRow).children('td:first').children('img').mouseover(function(){	
 						var that=this
 						if(aData[8]>10){
@@ -103,16 +115,33 @@ function jsCallbackReady(objectId){
 					
 					$(nRow).children('td:first').children('img').click(function(){
 					
-						var embedCode='<div id="myVideoPlayer"><object id="myVideoPlayer" name="myVideoPlayer" type="application/x-shockwave-flash" allowFullScreen="true" allowNetworking="all" allowScriptAccess="always" height="333" width="400" bgcolor="#000000" xmlns:dc="http://purl.org/dc/terms/" xmlns:media="http://search.yahoo.com/searchmonkey/media/" rel="media:video" resource="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_725102/uiconf_id/8145862/entry_id/'+aData[2]+'" data="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_725102/uiconf_id/8145862/entry_id/'+aData[2]+'"><param name="allowFullScreen" value="true" /><param name="allowNetworking" value="all" /><param name="allowScriptAccess" value="always" /><param name="bgcolor" value="#000000" /><param name="flashVars" value="externalInterfaceDisabled=false" /> <param name="movie" value="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_725102/uiconf_id/8145862/entry_id/' + aData[2]+ '" /></object></div>'
+						var embedCode='<div id="videoPlayerContainer"><object id="myVideoPlayer" name="myVideoPlayer" type="application/x-shockwave-flash" allowFullScreen="true" allowNetworking="all" allowScriptAccess="always" height="333" width="400" bgcolor="#000000" xmlns:dc="http://purl.org/dc/terms/" xmlns:media="http://search.yahoo.com/searchmonkey/media/" rel="media:video" resource="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_725102/uiconf_id/8145862/entry_id/'+aData[2]+'" data="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_725102/uiconf_id/8145862/entry_id/'+aData[2]+'"><param name="allowFullScreen" value="true" /><param name="allowNetworking" value="all" /><param name="allowScriptAccess" value="always" /><param name="bgcolor" value="#000000" /><param name="flashVars" value="externalInterfaceDisabled=false" /> <param name="movie" value="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_725102/uiconf_id/8145862/entry_id/' + aData[2]+ '" /></object><p id="shareCuePoint">Share Cue Point</p></div>'
 						
 						$.fancybox(embedCode, { 
-							'height':333,
+							'height':333+10,
 							'width':400,
 							'scrolling':'no',
 							'autoDimensions':'false'
 							}
 						)
 						
+						$('#shareCuePoint').live('click', function(){
+							//pause the player
+							kdp.sendNotification('doPause')
+							
+							//get the cuetime and make the path
+							var cuePoint=Math.floor(kdp.evaluate("{video.player.currentTime}"))
+							var path=document.URL+'?entry_id='+aData[2] +'&vid_sec='+cuePoint
+							var that=this
+							
+							//replace the content
+							$('#videoPlayerContainer').html('<p>'+path+'</p><p id="back" >BACK</p>')
+							$('#back').click(function(){
+								$('#videoPlayerContainer').html(kdp).append(that)
+							})
+							
+							seekValue=cuePoint
+						})
 						
 					})
 				}
