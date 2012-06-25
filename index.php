@@ -50,6 +50,11 @@ function parseQueryString(string){
 	}
 	return queryParams
 }
+
+function removeQueryString(string){
+	var n=string.split('?')
+	return n[0]
+}
 queryParams=(parseQueryString(document.URL))
 
 seekValue=0
@@ -110,7 +115,9 @@ startPlayer=function(){
 					var times=new Array();	
 					var i=0
 					var timer=null
-					
+					if(aData[2]==queryParams['entry_id']){
+						alert(aData[2])
+					}
 					
 					//Perhaps a call back function should be set here to be performed at the very end
 					$(nRow).children('td:first').children('img').mouseover(function(){	
@@ -159,7 +166,7 @@ startPlayer=function(){
 							
 							//get the cuetime and make the path
 							var cuePoint=Math.floor(kdp.evaluate("{video.player.currentTime}"))
-							var path=document.URL+'?entry_id='+aData[2] +'&vid_sec='+cuePoint
+							var path=removeQueryString(document.URL)+'?entry_id='+aData[2] +'&vid_sec='+cuePoint
 							var that=this
 							
 							//replace the content
