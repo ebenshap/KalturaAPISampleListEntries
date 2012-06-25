@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<?php require_once('kalturaconf.php') ?><!DOCTYPE HTML>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -32,7 +32,7 @@
 	<!-- Page Scripts -->
 	<script type="text/javascript" charset="utf-8">
 
-
+partnerId=<?php echo '"'.$partnerId.'"' ?>
 
 function parseQueryString(string){
 	queryParams=Object()
@@ -58,6 +58,9 @@ function removeQueryString(string){
 queryParams=(parseQueryString(document.URL))
 
 seekValue=0
+if(queryParams['vid_sec']){
+	seekValue=queryParams['vid_sec']
+}
 
 function jsCallbackReady(objectId){
 	window.kdp=document.getElementById(objectId)
@@ -65,6 +68,36 @@ function jsCallbackReady(objectId){
 	kdp.addJsListener("kdpReady", 'startPlayer')
 	
 }	
+
+function showPlayer(entryId, partnerId){
+	var embedCode='<div id="videoPlayerContainer"><object id="myVideoPlayer" name="myVideoPlayer" type="application/x-shockwave-flash" allowFullScreen="true" allowNetworking="all" allowScriptAccess="always" height="333" width="400" bgcolor="#000000" xmlns:dc="http://purl.org/dc/terms/" xmlns:media="http://search.yahoo.com/searchmonkey/media/" rel="media:video" resource="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_'+partnerId+'/uiconf_id/8145862/entry_id/'+entryId+'" data="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_'+partnerId+'/uiconf_id/8145862/entry_id/'+entryId+'"><param name="allowFullScreen" value="true" /><param name="allowNetworking" value="all" /><param name="allowScriptAccess" value="always" /><param name="bgcolor" value="#000000" /><param name="flashVars" value="externalInterfaceDisabled=false" /> <param name="movie" value="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_'+partnerId+'/uiconf_id/8145862/entry_id/'+entryId+'" /></object><p id="shareCuePoint">Share Cue Point</p></div>'
+	
+	$.fancybox(embedCode, { 
+		'height':333+10,
+		'width':400,
+		'scrolling':'no',
+		'autoDimensions':'false'
+		})
+						
+	$('#shareCuePoint').live('click', function(){
+		//pause the player
+							
+							
+		//get the cuetime and make the path
+		var cuePoint=Math.floor(kdp.evaluate("{video.player.currentTime}"))
+		var path=removeQueryString(document.URL)+'?entry_id='+entryId +'&vid_sec='+cuePoint
+		var that=this
+							
+		//replace the content
+		$('#videoPlayerContainer').html('<p>'+path+'</p><p id="back" >BACK</p>')
+		$('#back').click(function(){
+			$('#videoPlayerContainer').html(kdp).append(that)
+								
+		})
+							
+		seekValue=cuePoint
+	})
+}
 
 startPlayer=function(){
 	kdp.removeJsListener("kdpReady", 'startPlayer')
@@ -116,7 +149,6 @@ startPlayer=function(){
 					var i=0
 					var timer=null
 					if(aData[2]==queryParams['entry_id']){
-						alert(aData[2])
 					}
 					
 					//Perhaps a call back function should be set here to be performed at the very end
@@ -150,35 +182,7 @@ startPlayer=function(){
 					
 					$(nRow).children('td:first').children('img').click(function(){
 					
-						var embedCode='<div id="videoPlayerContainer"><object id="myVideoPlayer" name="myVideoPlayer" type="application/x-shockwave-flash" allowFullScreen="true" allowNetworking="all" allowScriptAccess="always" height="333" width="400" bgcolor="#000000" xmlns:dc="http://purl.org/dc/terms/" xmlns:media="http://search.yahoo.com/searchmonkey/media/" rel="media:video" resource="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_725102/uiconf_id/8145862/entry_id/'+aData[2]+'" data="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_725102/uiconf_id/8145862/entry_id/'+aData[2]+'"><param name="allowFullScreen" value="true" /><param name="allowNetworking" value="all" /><param name="allowScriptAccess" value="always" /><param name="bgcolor" value="#000000" /><param name="flashVars" value="externalInterfaceDisabled=false" /> <param name="movie" value="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_725102/uiconf_id/8145862/entry_id/' + aData[2]+ '" /></object><p id="shareCuePoint">Share Cue Point</p></div>'
-						
-						$.fancybox(embedCode, { 
-							'height':333+10,
-							'width':400,
-							'scrolling':'no',
-							'autoDimensions':'false'
-							}
-						)
-						
-						$('#shareCuePoint').live('click', function(){
-							//pause the player
-							
-							
-							//get the cuetime and make the path
-							var cuePoint=Math.floor(kdp.evaluate("{video.player.currentTime}"))
-							var path=removeQueryString(document.URL)+'?entry_id='+aData[2] +'&vid_sec='+cuePoint
-							var that=this
-							
-							//replace the content
-							$('#videoPlayerContainer').html('<p>'+path+'</p><p id="back" >BACK</p>')
-							$('#back').click(function(){
-								$('#videoPlayerContainer').html(kdp).append(that)
-								
-							})
-							
-							seekValue=cuePoint
-						})
-						
+						showPlayer(aData[2], partnerId)
 					})
 				}
 			} );
@@ -196,6 +200,10 @@ startPlayer=function(){
 				oTable.fnDraw();
 			});
 			
+			if(queryParams['entry_id']){
+			
+			showPlayer(queryParams['entry_id'], partnerId)
+		}
 	
 		} );
 		
