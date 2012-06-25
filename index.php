@@ -31,16 +31,44 @@
 	-->
 	<!-- Page Scripts -->
 	<script type="text/javascript" charset="utf-8">
+
+
+
+function parseQueryString(string){
+	queryParams=Object()
+	if(typeof(string)==='string'){
+		var n=string.split('?')
+		if(n[1]){
+			var n=n[1].split('&')
+			var o=null
+			for(var i=0; i<n.length; i++){
+				o=n[i].split('=')
+				queryParams[o[0]]=o[1]
+			}
+			
+		}
+	}
+	return queryParams
+}
+queryParams=(parseQueryString(document.URL))
+
+seekValue=0
+
 function jsCallbackReady(objectId){
 	window.kdp=document.getElementById(objectId)
  	
 	kdp.addJsListener("kdpReady", 'startPlayer')
 	
 }	
-startPlayer=function(){
 
-	
-	kdp.sendNotification('doPlay')
+startPlayer=function(){
+	kdp.removeJsListener("kdpReady", 'startPlayer')
+	if(seekValue){
+		kdp.sendNotification('doSeek', seekValue)
+		seekValue=0
+	}else{
+		kdp.sendNotification('doPlay')
+	}
 }
 	
 		$(document).ready(function() {
@@ -127,7 +155,7 @@ startPlayer=function(){
 						
 						$('#shareCuePoint').live('click', function(){
 							//pause the player
-							kdp.sendNotification('doPause')
+							
 							
 							//get the cuetime and make the path
 							var cuePoint=Math.floor(kdp.evaluate("{video.player.currentTime}"))
@@ -138,6 +166,7 @@ startPlayer=function(){
 							$('#videoPlayerContainer').html('<p>'+path+'</p><p id="back" >BACK</p>')
 							$('#back').click(function(){
 								$('#videoPlayerContainer').html(kdp).append(that)
+								
 							})
 							
 							seekValue=cuePoint
