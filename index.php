@@ -172,7 +172,7 @@ startPlayer=function(){
 								for(i; i<10; i++){
 									timeUnits=Math.floor(timeUnit*i)
 									times.push(new Image());
-									times[i].setAttribute('src', 'http://cdn.kaltura.com/p/725102/thumbnail/entry_id/'+aData[2]+'/width/50/height/50/type/1/quality/100/vid_sec/'+timeUnits);
+									times[i].setAttribute('src', 'http://cdn.kaltura.com/p/'+partnerId+'/thumbnail/entry_id/'+aData[2]+'/width/50/height/50/type/1/quality/100/vid_sec/'+timeUnits);
 								}
 								i=0
 							}
