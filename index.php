@@ -57,20 +57,20 @@ function removeQueryString(string){
 }
 queryParams=(parseQueryString(document.URL))
 
-seekValue=0
+seekValue=null
 if(queryParams['vid_sec']){
 	seekValue=queryParams['vid_sec']
 }
 
 function jsCallbackReady(objectId){
 	window.kdp=document.getElementById(objectId)
- 	
+ 	$('#videoPlayerContainer').append('<p id="shareCuePoint">Share Cue Point</p>')
 	kdp.addJsListener("kdpReady", 'startPlayer')
 	
 }	
 
 function showPlayer(entryId, partnerId){
-	var embedCode='<div id="videoPlayerContainer"><object id="myVideoPlayer" name="myVideoPlayer" type="application/x-shockwave-flash" allowFullScreen="true" allowNetworking="all" allowScriptAccess="always" height="333" width="400" bgcolor="#000000" xmlns:dc="http://purl.org/dc/terms/" xmlns:media="http://search.yahoo.com/searchmonkey/media/" rel="media:video" resource="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_'+partnerId+'/uiconf_id/8145862/entry_id/'+entryId+'" data="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_'+partnerId+'/uiconf_id/8145862/entry_id/'+entryId+'"><param name="allowFullScreen" value="true" /><param name="allowNetworking" value="all" /><param name="allowScriptAccess" value="always" /><param name="bgcolor" value="#000000" /><param name="flashVars" value="externalInterfaceDisabled=false" /> <param name="movie" value="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_'+partnerId+'/uiconf_id/8145862/entry_id/'+entryId+'" /></object><p id="shareCuePoint">Share Cue Point</p></div>'
+	var embedCode='<div id="videoPlayerContainer"><object id="myVideoPlayer" name="myVideoPlayer" type="application/x-shockwave-flash" allowFullScreen="true" allowNetworking="all" allowScriptAccess="always" height="333" width="400" bgcolor="#000000" xmlns:dc="http://purl.org/dc/terms/" xmlns:media="http://search.yahoo.com/searchmonkey/media/" rel="media:video" resource="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_'+partnerId+'/uiconf_id/8145862/entry_id/'+entryId+'" data="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_'+partnerId+'/uiconf_id/8145862/entry_id/'+entryId+'"><param name="allowFullScreen" value="true" /><param name="allowNetworking" value="all" /><param name="allowScriptAccess" value="always" /><param name="bgcolor" value="#000000" /><param name="flashVars" value="externalInterfaceDisabled=false" /> <param name="movie" value="http://www.kaltura.com/index.php/kwidget/cache_st/1340498155/wid/_'+partnerId+'/uiconf_id/8145862/entry_id/'+entryId+'" /></object></div>'
 	
 	$.fancybox(embedCode, { 
 		'height':333+10,
@@ -101,10 +101,10 @@ function showPlayer(entryId, partnerId){
 
 startPlayer=function(){
 	kdp.removeJsListener("kdpReady", 'startPlayer')
-	if(seekValue){
+	if(seekValue!=null){
 		kdp.sendNotification('doSeek', seekValue)
-		seekValue=0
-	}else{
+		seekValue=null
+	}else{ 
 		kdp.sendNotification('doPlay')
 	}
 }
@@ -155,6 +155,16 @@ startPlayer=function(){
 					$(nRow).children('td:first').children('img').mouseover(function(){	
 						var that=this
 						if(aData[8]>10){
+							
+							timer=setInterval(function(){
+								if(i < 10 && times.length==10 ){
+									
+									that.src=times[i++].src
+								}else{
+									i=0
+								}	
+							},800)
+							
 							if(times.length<10){
 								
 								var timeUnit=aData[8]/10
@@ -164,14 +174,10 @@ startPlayer=function(){
 									times.push(new Image());
 									times[i].setAttribute('src', 'http://cdn.kaltura.com/p/725102/thumbnail/entry_id/'+aData[2]+'/width/50/height/50/type/1/quality/100/vid_sec/'+timeUnits);
 								}
+								i=0
 							}
-							i=0
-							timer=setInterval(function(){
-								if(i < 10){
-									
-									that.src=times[i++].src
-								}	
-							},800)
+							
+							
 						
 						}
 					})
